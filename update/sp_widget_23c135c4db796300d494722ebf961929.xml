@@ -42,10 +42,10 @@
         <docs/>
         <field_list>table,filter,field_list,maximum_entries,order_by,order_direction,title,color,glyph,sp_page</field_list>
         <has_preview>false</has_preview>
-        <id>incident_portal_widget</id>
+        <id/>
         <internal>false</internal>
         <link/>
-        <name>incident_portal_widget</name>
+        <name>Copy of incident_portal_widget</name>
         <option_schema>[{"name":"inc_state","section":"Data","default_value":"All","label":"Incident State","type":"choice","choices":[{"label":"All","value":"All"},{"label":"Open","value":"Open"},{"label":"Closed","value":"Closed"},{"label":"New","value":"New"}]}]</option_schema>
         <public>false</public>
         <roles/>
@@ -131,16 +131,16 @@
         <servicenow>false</servicenow>
         <sys_class_name>sp_widget</sys_class_name>
         <sys_created_by>rpoore_admin</sys_created_by>
-        <sys_created_on>2018-11-09 00:33:22</sys_created_on>
-        <sys_id>d5e08fdbdb212300d494722ebf9619be</sys_id>
-        <sys_mod_count>117</sys_mod_count>
-        <sys_name>incident_portal_widget</sys_name>
+        <sys_created_on>2018-11-11 02:43:16</sys_created_on>
+        <sys_id>23c135c4db796300d494722ebf961929</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Copy of incident_portal_widget</sys_name>
         <sys_package display_value="Incident Portal" source="x_159204_incportal">271003dbdb212300d494722ebf96190c</sys_package>
         <sys_policy/>
         <sys_scope display_value="Incident Portal">271003dbdb212300d494722ebf96190c</sys_scope>
-        <sys_update_name>sp_widget_d5e08fdbdb212300d494722ebf9619be</sys_update_name>
+        <sys_update_name>sp_widget_23c135c4db796300d494722ebf961929</sys_update_name>
         <sys_updated_by>rpoore_admin</sys_updated_by>
-        <sys_updated_on>2018-11-11 02:38:30</sys_updated_on>
+        <sys_updated_on>2018-11-11 02:43:16</sys_updated_on>
         <template><![CDATA[<div>
   <div class="alert alert-danger" ng-if="data.invalid_table">
     ${Table not defined} '{{data.table_label}}'
