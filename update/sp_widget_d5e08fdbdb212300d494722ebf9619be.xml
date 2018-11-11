@@ -11,31 +11,63 @@
 		spAriaFocusManager.navigateToLink(newURL.url());
 	});
 	
-	$scope.number = {
+	//$scope.ticket_number = {
+	c.ticket_number = {
 		name: 'number',
 		value: c.data.sys_id	
 	};	
 	
-	$scope.$on("field.change", function(e, parms) {
-		
+	
+	c.clearSearch = function(){  
+		c.data.filter = c.data.storef;
+		c.setSearch(true);
+	};
+
+	// this isn't used because I'm stupid.
+	$scope.$on("field.change", function(e, parms) {		
 		if (parms.field.name == 'number') {
-			alert(parms.newValue);
-			//alert(parms.field.value);
-			//c.data.bob = 'parms.newValue';
-			c.sysid = parms.newValue;
-			//$scope.data.filter = 'sys_id=' + parms.newValue;
-			//var s = {table: parms.table}
-			//alert($scope.data.table);
-			
+			c.data.sysid = parms.newValue;		
 		}
-		c.server.update().then(function(response) { 
-			spUtil.update($scope);			
-		})
+		
+		//c.server.refresh();
+		//c.server.update().then(function(response) { 
+		//	spUtil.update($scope);			
+		//})
 	});	
+	
+	// being silly
+	var x = -80; //Starting Location - left
+	var y = 200; //Starting Location - top
+	var dest_x = $(window).width();  //Ending Location - left
+	var dest_y = 200;  //Ending Location - top
+	var interval = 1; //Move this many pixels every initialization	
+	
+	movePacman();
+	
+	function movePacman() {
+		//Keep on moving the image till the target is achieved
+		if (x < dest_x) x = x + interval;
+
+		//Move the image to the new location
+		document.getElementById("pacman").style.top = '17px';
+		document.getElementById("pacman").style.left = x + 'px';
+
+		if (x + interval < dest_x) {
+			setTimeout(movePacman, 12);
+		}
+	}
+
+	
+	
+	
 	
 }]]></client_script>
         <controller_as>c</controller_as>
-        <css/>
+        <css>#pacman {
+  position: absolute;
+  top: 100px;
+  left: 10px;
+}</css>
         <data_table>sp_instance_table</data_table>
         <demo_data/>
         <description/>
@@ -46,7 +78,7 @@
         <internal>false</internal>
         <link/>
         <name>incident_portal_widget</name>
-        <option_schema>[{"name":"inc_state","section":"Data","default_value":"All","label":"Incident State","type":"choice","choices":[{"label":"All","value":"All"},{"label":"Open","value":"Open"},{"label":"Closed","value":"Closed"},{"label":"New","value":"New"}]}]</option_schema>
+        <option_schema>[{"name":"inc_state","section":"Data","default_value":"All","label":"Incident State","type":"choice","choices":[{"label":"All","value":"All"},{"label":"Open","value":"Open"},{"label":"Closed","value":"Closed"},{"label":"New","value":"New"}]},{"name":"show_keywords","section":"other","default_value":"false","label":"Show Keyword Search","type":"boolean"}]</option_schema>
         <public>false</public>
         <roles/>
         <script><![CDATA[(function(){
@@ -59,9 +91,6 @@
 	data.filter = pageGR.getValue("filter");
 	$sp.getValues(data);
 	
-	//gs.info('The data is: ' + data.filter);
-	//gs.info('The Bob is:' + data.bob);
-	
 	if (data.field_list) {
 		data.fields_array = data.field_list.split(',');
 	} else {
@@ -69,7 +98,6 @@
 	}
 
 	// get the selected state from the options schema
-	/*
 	switch (options.inc_state) {
 		case 'Open':
 			data.filter = 'state!=7';
@@ -84,16 +112,12 @@
 		default:
 			data.filter = $sp.getValue("filter");			
 	}
-	*/
 	
 	if (input) {
 		data.p = input.p;
 		data.o = input.o;
 		data.d = input.d;
 		data.q = input.q;
-		//data.table = input.mytable;
-		//data.filter = input.myfilter;
-		gs.info('The sys id is : ' + input.sysid);
 	}
 	data.p = data.p || 1;
 	data.o = data.o || $sp.getValue('order_by');
@@ -104,7 +128,23 @@
 	data.window_start  = (data.page_index * data.window_size);
 	data.window_end = (((data.page_index + 1) * data.window_size));
 	//data.filter = $sp.getValue("filter");
-
+	
+	//if (input.sysid) {
+	if (2 < 1) {
+		//data.selected_sysid = input.sysid;
+		data.table = 'incident';
+		//data.filter = 'sys_id=' + input.sysid;
+		
+		gs.info('Selected sys_id is : ' + input.sysid);
+		gs.info('Table is: ' + data.table);		
+		gs.info('Filter is: ' + data.filter);	
+		gs.info('Fields are: ' + data.field_list);
+		gs.info('O is: ' + data.o);
+		gs.info('D is: ' + data.d); 
+		gs.info('Title is:' + options.title);
+		gs.info('Window size: ' + data.window_size);
+	}	
+	
 	var gr = new GlideRecordSecure(data.table);
 	
 	if (!gr.isValid()) {
@@ -120,10 +160,12 @@
 		fields: data.field_list,
 		o: data.o,
 		d: data.d,
-		filter: data.filter,
+		filter: data.filter, //'sys_id=9d385017c611228701d22104cc95c371',
 		window_size: data.window_size,
 		view: 'sp',
 		headerTitle: options.title,
+		show_keywords: options.show_keywords,
+		storef: data.filter,
 		show_breadcrumbs: true
 	};
 	data.dataTableWidget = $sp.getWidget('widget-data-table', widgetParams);
@@ -133,14 +175,14 @@
         <sys_created_by>rpoore_admin</sys_created_by>
         <sys_created_on>2018-11-09 00:33:22</sys_created_on>
         <sys_id>d5e08fdbdb212300d494722ebf9619be</sys_id>
-        <sys_mod_count>117</sys_mod_count>
+        <sys_mod_count>147</sys_mod_count>
         <sys_name>incident_portal_widget</sys_name>
         <sys_package display_value="Incident Portal" source="x_159204_incportal">271003dbdb212300d494722ebf96190c</sys_package>
         <sys_policy/>
         <sys_scope display_value="Incident Portal">271003dbdb212300d494722ebf96190c</sys_scope>
         <sys_update_name>sp_widget_d5e08fdbdb212300d494722ebf9619be</sys_update_name>
         <sys_updated_by>rpoore_admin</sys_updated_by>
-        <sys_updated_on>2018-11-11 02:38:30</sys_updated_on>
+        <sys_updated_on>2018-11-11 15:52:46</sys_updated_on>
         <template><![CDATA[<div>
   <div class="alert alert-danger" ng-if="data.invalid_table">
     ${Table not defined} '{{data.table_label}}'
@@ -155,7 +197,12 @@
                     placeholder="Pick a number between A and C">
   </sn-record-picker>
   <p></p>
+  <div id="pacman">
+    <img src="https://orig00.deviantart.net/6066/f/2015/047/0/8/pacman_by_reaper138-d8i8do7.gif" width="92" />
+  </div>
   <sp-widget ng-if="data.dataTableWidget" widget="data.dataTableWidget"></sp-widget>
-</div>]]></template>
+</div>
+
+]]></template>
     </sp_widget>
 </record_update>
